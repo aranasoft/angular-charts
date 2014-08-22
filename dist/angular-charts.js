@@ -88,6 +88,12 @@ angular.module('angularCharts').directive('acChart', [
             position: 'left',
             htmlEnabled: false
           },
+          margin: {
+            top: 0,
+            right: 40,
+            bottom: 20,
+            left: 40
+          },
           colors: [],
           innerRadius: 0,
           lineLegend: 'lineEnd',
@@ -210,12 +216,7 @@ angular.module('angularCharts').directive('acChart', [
        * Setup date attributes
        * @type {Object}
        */
-        var margin = {
-            top: 0,
-            right: 20,
-            bottom: 30,
-            left: 40
-          };
+        var margin = config.margin;
         width -= margin.left + margin.right;
         height -= margin.top + margin.bottom;
         var x = d3.scale.ordinal().rangeRoundBands([
@@ -339,12 +340,7 @@ angular.module('angularCharts').directive('acChart', [
      * @return {[type]} [description]
      */
       function lineChart() {
-        var margin = {
-            top: 0,
-            right: 40,
-            bottom: 20,
-            left: 40
-          };
+        var margin = config.margin;
         width -= margin.left + margin.right;
         height -= margin.top + margin.bottom;
         var x = d3.scale.ordinal().domain(points.map(function (d) {
@@ -401,7 +397,7 @@ angular.module('angularCharts').directive('acChart', [
         ]);
         var xAxisSelection = svg.append('g').attr('class', 'x axis').attr('transform', 'translate(0,' + height + ')').call(xAxis);
         if (config.xAxisLabelRotation)
-          xAxisSelection.selectAll('text').style('text-anchor', 'end').attr('dx', '-.8em').attr('dy', '.15em').attr('transform', function (d) {
+          xAxisSelection.selectAll('text').style('text-anchor', 'end').attr('x', (xAxis.tickSize() + xAxis.tickPadding()) * -1).attr('y', 0).attr('dy', '0.5em').attr('transform', function (d) {
             return 'rotate(' + config.xAxisLabelRotation + ')';
           });
         svg.append('g').attr('class', 'y axis').call(yAxis);
@@ -496,12 +492,7 @@ angular.module('angularCharts').directive('acChart', [
      * @return {[type]} [description]
      */
       function areaChart() {
-        var margin = {
-            top: 0,
-            right: 40,
-            bottom: 20,
-            left: 40
-          };
+        var margin = config.margin;
         width -= margin.left + margin.right;
         height -= margin.top + margin.bottom;
         var x = d3.scale.ordinal().domain(points.map(function (d) {
@@ -649,12 +640,7 @@ angular.module('angularCharts').directive('acChart', [
         }
       }
       function pointChart() {
-        var margin = {
-            top: 0,
-            right: 40,
-            bottom: 20,
-            left: 40
-          };
+        var margin = config.margin;
         width -= margin.left - margin.right;
         height -= margin.top - margin.bottom;
         var x = d3.scale.ordinal().domain(points.map(function (d) {
