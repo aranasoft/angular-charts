@@ -79,6 +79,12 @@ angular.module('angularCharts').directive('acChart', function($templateCache, $c
         position: 'left',
         htmlEnabled: false
       },
+      margin: {
+        top: 0,
+        right: 40,
+        bottom: 20,
+        left: 40
+      },
       colors: [],
       innerRadius: 0, // Only on pie Charts
       lineLegend: 'lineEnd', // Only on line Charts
@@ -223,7 +229,7 @@ angular.module('angularCharts').directive('acChart', function($templateCache, $c
        * Setup date attributes
        * @type {Object}
        */
-      var margin = {top: 0, right: 20, bottom: 30, left: 40};
+      var margin = config.margin;
           width -=  margin.left + margin.right;
           height -= margin.top + margin.bottom;
 
@@ -373,7 +379,7 @@ angular.module('angularCharts').directive('acChart', function($templateCache, $c
      * @return {[type]} [description]
      */
     function lineChart() {
-      var margin = {top: 0, right: 40, bottom: 20, left: 40};
+      var margin = config.margin;
           width -= margin.left + margin.right;
           height -=  margin.top + margin.bottom;
 
@@ -443,8 +449,10 @@ angular.module('angularCharts').directive('acChart', function($templateCache, $c
       if( config.xAxisLabelRotation )
           xAxisSelection.selectAll("text")
             .style("text-anchor","end")
-            .attr("dx","-.8em")
-            .attr("dy",".15em")
+            .attr("x", (xAxis.tickSize() + xAxis.tickPadding()) * -1)
+            .attr("y", 0)
+            //.attr("dx","-10px")
+            .attr("dy","0.5em")
             .attr("transform", function(d){return "rotate(" + config.xAxisLabelRotation + ")"});
 
       svg.append("g")
@@ -557,7 +565,7 @@ angular.module('angularCharts').directive('acChart', function($templateCache, $c
      * @return {[type]} [description]
      */
     function areaChart() {
-      var margin = {top: 0, right: 40, bottom: 20, left: 40};
+      var margin = config.margin;
           width -= margin.left + margin.right;
           height -=  margin.top + margin.bottom;
 
@@ -766,7 +774,7 @@ angular.module('angularCharts').directive('acChart', function($templateCache, $c
 
 
     function pointChart() {
-      var margin = {top: 0, right: 40, bottom: 20, left: 40};
+      var margin = config.margin;
           width -= margin.left - margin.right;
           height -=  margin.top - margin.bottom;
 
