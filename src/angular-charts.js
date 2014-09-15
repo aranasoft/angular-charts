@@ -395,6 +395,43 @@ angular.module('angularCharts').directive('acChart', function($templateCache, $c
           .orient("bottom");
       filterXAxis(xAxis, x);
 
+
+
+        var originalFormatPrefix = d3.formatPrefix;
+        if(config.useCustomYAxis) {
+          function d3_format_precision(x, p) {
+            return p - (x ? Math.ceil(Math.log(x) / Math.LN10) : 1);
+          }
+
+          function d3_formatPrefix(d, i) {
+            var k = Math.pow(10, Math.abs(8 - i) * 3);
+            return {
+              scale: i > 8 ? function (d) {
+                return d / k;
+              } : function (d) {
+                return d * k;
+              },
+                symbol: d
+              };
+            }
+
+          d3.formatPrefix = function (value, precision) {
+            var i = 0;
+            if (value) {
+              if (value < 0) value *= -1;
+                if (precision) value = d3.round(value, d3_format_precision(value, precision));
+                  i = 1 + Math.floor(1e-12 + Math.log(value) / Math.LN10);
+                  i = Math.max(-24, Math.min(24, Math.floor((i - 1) / 3) * 3));
+                }
+                return custom_d3_formatPrefixes[8 + i / 3];
+            };
+
+          var custom_d3_formatPrefixes = [ "", "", "", "", "", "", "", "", "", "K", "M", "B", "T", "", "", "", "" ].map(d3_formatPrefix);
+        }
+
+
+
+
       var yAxis = d3.svg.axis()
           .scale(y)
           .orient("left")
@@ -458,6 +495,8 @@ angular.module('angularCharts').directive('acChart', function($templateCache, $c
       svg.append("g")
           .attr("class", "y axis")
           .call(yAxis);
+
+      d3.formatPrefix = originalFormatPrefix
 
       var point = svg.selectAll(".points")
           .data(linedata)
